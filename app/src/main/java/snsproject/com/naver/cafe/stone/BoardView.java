@@ -1,22 +1,30 @@
 package snsproject.com.naver.cafe.stone;
 
-import android.content.Context;
-import android.content.res.TypedArray;
+import android.app.Activity;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
-import android.graphics.drawable.Drawable;
-import android.text.TextPaint;
-import android.util.AttributeSet;
+import android.view.Display;
+import android.view.MotionEvent;
 import android.view.View;
 
+import java.util.ArrayList;
 
 
 public class BoardView extends View {
 
-    public BoardView(Context context) {
-        super(context);
+    private final int MIN_LINE = 1;
+    private final int MAX_LINE = 20;
+    private final int SPACING;
+
+    public BoardView(Activity activity) {
+        super(activity);
+
+        Display display = activity.getWindowManager().getDefaultDisplay();
+        final int width = display.getWidth();
+
+        SPACING = width / MAX_LINE;
     }
 
     @Override
@@ -24,18 +32,15 @@ public class BoardView extends View {
         // TODO Auto-generated method stub
         Paint pnt = new Paint();
 
-        final int MIN_LINE = 1;
-        final int MAX_LINE = 20;
-        final int SPACING = 30;
-
-        // 배경 그리기
+        // background
         pnt.setColor(Color.parseColor("#cc6600"));
         int newSize = (MAX_LINE * SPACING);
         final Rect r = new Rect(0, 0, newSize, newSize);
         canvas.drawRect(r, pnt);
 
-        // 보드 라인 그리기
+        // draw lines
         pnt.setColor(Color.parseColor("#000000"));
+        pnt.setStrokeWidth(3);
 
         for (int i = MIN_LINE; i < MAX_LINE; i++) {
             float newPos = i * SPACING;
@@ -46,14 +51,49 @@ public class BoardView extends View {
             canvas.drawLine(newPos, minPos, newPos, maxPos, pnt);
         }
 
-        // 화점 찍기
-        final int[][] dots = { { 4, 4 }, { 4, 10 }, { 4, 16 }, { 10, 4 },
-                { 10, 10 }, { 10, 16 }, { 16, 4 }, { 16, 10 }, { 16, 16 } };
-
-        for (int i = 0; i < dots.length; i++) {
-            canvas.drawCircle(dots[i][0] * SPACING, dots[i][1] * SPACING,
-                    5, pnt);
-
+        // draw dots
+        final int[] dots = {4, 10, 16};
+        int size = dots.length;
+        for (int i = 0; i < size; i++) {
+            for (int j = 0; j < size; j++) {
+                canvas.drawCircle(dots[i] * SPACING, dots[j] * SPACING,
+                        10, pnt);
+            }
         }
+
+        boolean isBlack = true;
+        for (StoneInfo stone : stones) {
+            if (isBlack) {
+                pnt.setColor(Color.parseColor("#000000"));
+            } else {
+                pnt.setColor(Color.parseColor("#ffffff"));
+            }
+            canvas.drawCircle(stone.getX() * SPACING, stone.getY() * SPACING, SPACING / 2, pnt);
+
+            isBlack = !isBlack;
+        }
+    }
+
+
+    private ArrayList<StoneInfo> stones = new ArrayList<>();
+
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        float x = event.getX();
+        float y = event.getY();
+
+        //int shareX = (int) (x / SPACING);
+        //int shareY = (int) (y / SPACING);
+
+        //if ((shareX >= MIN_LINE && shareX < MAX_LINE) && (shareY >= MIN_LINE && shareY < MAX_LINE)) {
+            int xPos = Math.round(x / SPACING);
+            int yPos = Math.round(y / SPACING);
+
+            stones.add(new StoneInfo(xPos, yPos));
+            invalidate();
+        //}
+
+
+        return super.onTouchEvent(event);
     }
 }
