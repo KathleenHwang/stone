@@ -5,7 +5,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
-import android.view.Display;
+import android.util.DisplayMetrics;
 import android.view.MotionEvent;
 import android.view.View;
 
@@ -21,8 +21,10 @@ public class BoardView extends View {
     public BoardView(Activity activity) {
         super(activity);
 
-        Display display = activity.getWindowManager().getDefaultDisplay();
-        final int width = display.getWidth();
+        DisplayMetrics display = this.getResources().getDisplayMetrics();
+
+        final int width = display.widthPixels;
+
 
         SPACING = width / MAX_LINE;
     }
@@ -82,17 +84,13 @@ public class BoardView extends View {
         float x = event.getX();
         float y = event.getY();
 
-        //int shareX = (int) (x / SPACING);
-        //int shareY = (int) (y / SPACING);
+        int xIndex = Math.round(x / SPACING);
+        int yIndex = Math.round(y / SPACING);
 
-        //if ((shareX >= MIN_LINE && shareX < MAX_LINE) && (shareY >= MIN_LINE && shareY < MAX_LINE)) {
-            int xPos = Math.round(x / SPACING);
-            int yPos = Math.round(y / SPACING);
-
-            stones.add(new StoneInfo(xPos, yPos));
+        if ((xIndex >= MIN_LINE && xIndex < MAX_LINE) && (yIndex >= MIN_LINE && yIndex < MAX_LINE)) {
+            stones.add(new StoneInfo(xIndex, yIndex));
             invalidate();
-        //}
-
+        }
 
         return super.onTouchEvent(event);
     }
