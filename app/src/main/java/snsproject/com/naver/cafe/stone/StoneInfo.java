@@ -6,10 +6,12 @@ package snsproject.com.naver.cafe.stone;
 public class StoneInfo {
     private int x;
     private int y;
+    private boolean isBlack;
 
-    public StoneInfo(int x, int y) {
+    public StoneInfo(int x, int y, boolean isBlack) {
         this.x = x;
         this.y = y;
+        this.isBlack = isBlack;
     }
 
     int getX() {
@@ -18,5 +20,9 @@ public class StoneInfo {
 
     int getY() {
         return y;
+    }
+
+    public boolean isBlack() {
+        return isBlack;
     }
 }

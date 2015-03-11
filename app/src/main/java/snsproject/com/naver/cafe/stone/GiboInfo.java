@@ -11,6 +11,7 @@ public class GiboInfo {
     private int mCnt;
     private int mId;
     private int mParentId;
+    private int mParentCnt;
 
     public GiboInfo(float typeName, char color, int x, int y, int cnt, int id, int pId) {
         mTypeName = typeName;
@@ -40,5 +41,17 @@ public class GiboInfo {
 
     public int getParentId() {
         return mParentId;
+    }
+
+    public int getCnt() {
+        return mCnt;
+    }
+
+    public void setParentCnt(int parentCnt) {
+        this.mParentCnt = parentCnt;
+    }
+
+    public int getParentCnt() {
+        return mParentCnt;
     }
 }

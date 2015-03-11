@@ -10,9 +10,12 @@ import android.view.MotionEvent;
 import android.view.View;
 
 import java.util.ArrayList;
+import java.util.List;
 
 
 public class BoardView extends View {
+
+    private DatabaseManager dbMgr;
 
     private final int MIN_LINE = 1;
     private final int MAX_LINE = 20;
@@ -25,8 +28,31 @@ public class BoardView extends View {
 
         final int width = display.widthPixels;
 
-
         SPACING = width / MAX_LINE;
+
+        dbMgr = new DatabaseManager(activity);
+        getGiboInfos(currentId);
+    }
+
+    private int currentId;
+
+    private void getGiboInfos(int parentId) {
+        List<GiboInfo> giboInfos = dbMgr.getGiboInfo(parentId);
+        if (giboInfos != null && giboInfos.size() > 0) {
+
+            int sum = 0;
+            for (GiboInfo giboInfo : giboInfos) {
+                sum += giboInfo.getCnt();
+            }
+
+            for (GiboInfo giboInfo : giboInfos) {
+                giboInfo.setParentCnt(sum);
+            }
+
+            this.giboInfos = giboInfos;
+
+            this.invalidate();
+        }
     }
 
     @Override
@@ -63,21 +89,41 @@ public class BoardView extends View {
             }
         }
 
-        boolean isBlack = true;
-        for (StoneInfo stone : stones) {
-            if (isBlack) {
-                pnt.setColor(Color.parseColor("#000000"));
-            } else {
-                pnt.setColor(Color.parseColor("#ffffff"));
-            }
-            canvas.drawCircle(stone.getX() * SPACING, stone.getY() * SPACING, SPACING / 2, pnt);
+        if (this.giboInfos != null) {
+            for (GiboInfo giboInfo : this.giboInfos) {
+                pnt.setColor(Color.parseColor("#ff0000"));
 
-            isBlack = !isBlack;
+                float x = giboInfo.getX() * SPACING;
+                float y = giboInfo.getY() * SPACING;
+                float radius = SPACING / 2;
+                canvas.drawCircle(x, y, SPACING / 2, pnt);
+
+                pnt.setColor(Color.parseColor("#ffffff"));
+                pnt.setTextSize(30.0f);
+                int percent = (int) (giboInfo.getCnt() * 100 / giboInfo.getParentCnt());
+                canvas.drawText(Integer.toString(percent), x-radius, y, pnt);
+            }
+        } else {
+            getGiboInfos(currentId);
+        }
+
+        {
+            for (StoneInfo stone : stones) {
+                if (stone.isBlack()) {
+                    pnt.setColor(Color.parseColor("#000000"));
+                } else {
+                    pnt.setColor(Color.parseColor("#ffffff"));
+                }
+                canvas.drawCircle(stone.getX() * SPACING, stone.getY() * SPACING, SPACING / 2, pnt);
+            }
+
+
         }
     }
 
 
     private ArrayList<StoneInfo> stones = new ArrayList<>();
+    private List<GiboInfo> giboInfos;
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
@@ -88,10 +134,26 @@ public class BoardView extends View {
         int yIndex = Math.round(y / SPACING);
 
         if ((xIndex >= MIN_LINE && xIndex < MAX_LINE) && (yIndex >= MIN_LINE && yIndex < MAX_LINE)) {
-            stones.add(new StoneInfo(xIndex, yIndex));
-            invalidate();
+
+            if (this.giboInfos != null) {
+                for (GiboInfo giboInfo : this.giboInfos) {
+                    if (giboInfo.getX() == xIndex && giboInfo.getY() == yIndex) {
+                        stones.add(new StoneInfo(xIndex, yIndex, (giboInfo.getColor() == 'B')));
+                        this.giboInfos = null;
+                        invalidate();
+
+                        currentId = giboInfo.getId();
+
+                        break;
+                    }
+                }
+            }
         }
 
         return super.onTouchEvent(event);
+    }
+
+    public void setGiboInfos(List<GiboInfo> giboInfos) {
+        this.giboInfos = giboInfos;
     }
 }
