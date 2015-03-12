@@ -1,26 +1,55 @@
 package snsproject.com.naver.cafe.stone;
 
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
-import android.util.Log;
+import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
-
-import java.util.List;
+import android.view.View;
+import android.widget.Button;
 
 
 public class MainActivity extends ActionBarActivity {
-    private BoardView board;
+
+    private View.OnClickListener onClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            int id = v.getId();
+            switch (id) {
+                case R.id.btnPrev:
+                    cBoard.goPrev();
+                    break;
+                default:
+                    break;
+            }
+        }
+    };
+
+    private BoardView cBoard;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        board = new BoardView(this);
+        setContentView(R.layout.activity_main);
 
-        setContentView(board);
+        initUi();
     }
 
+    private void initUi() {
+        this.cBoard = (BoardView) findViewById(R.id.cBoard);
+        Button btnBegin = (Button) findViewById(R.id.btnBegin);
+        btnBegin.setOnClickListener(onClickListener);
+        Button btnPrev = (Button) findViewById(R.id.btnPrev);
+        btnPrev.setOnClickListener(onClickListener);
+        Button btnPrevBranch = (Button) findViewById(R.id.btnPrevBranch);
+        btnPrevBranch.setOnClickListener(onClickListener);
+        Button btnNext = (Button) findViewById(R.id.btnNext);
+        btnNext.setOnClickListener(onClickListener);
+        Button btnNextBranch = (Button) findViewById(R.id.btnNextBranch);
+        btnNextBranch.setOnClickListener(onClickListener);
+        Button btnEnd = (Button) findViewById(R.id.btnEnd);
+        btnEnd.setOnClickListener(onClickListener);
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
