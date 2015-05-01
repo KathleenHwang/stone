@@ -1,4 +1,4 @@
-package snsproject.com.naver.cafe.stone;
+package snsproject.com.naver.cafe.stone.board;
 
 import android.content.Context;
 import android.graphics.Canvas;
@@ -7,12 +7,13 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import snsproject.com.naver.cafe.stone.DatabaseManager;
 
 
 public class BoardView extends View {

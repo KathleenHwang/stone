@@ -1,4 +1,4 @@
-package snsproject.com.naver.cafe.stone;
+package snsproject.com.naver.cafe.stone.board;
 
 /**
  * Created by ws on 2015-03-07.

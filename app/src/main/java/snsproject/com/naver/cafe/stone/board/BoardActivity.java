@@ -1,4 +1,4 @@
-package snsproject.com.naver.cafe.stone;
+package snsproject.com.naver.cafe.stone.board;
 
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
@@ -7,8 +7,10 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 
+import snsproject.com.naver.cafe.stone.R;
 
-public class MainActivity extends ActionBarActivity {
+
+public class BoardActivity extends ActionBarActivity {
 
     private View.OnClickListener onClickListener = new View.OnClickListener() {
         @Override
@@ -30,7 +32,7 @@ public class MainActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_board);
 
         initUi();
     }

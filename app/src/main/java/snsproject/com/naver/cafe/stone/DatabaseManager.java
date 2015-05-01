@@ -15,6 +15,8 @@ import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
+import snsproject.com.naver.cafe.stone.board.GiboInfo;
+
 /**
  * Created by sjhwang on 2015-03-07.
  */
@@ -27,7 +29,7 @@ public class DatabaseManager {
     /**
      * 기본형
      */
-    private static final String ANAL_1_TABLE = "anal_1";
+    private static final String ANAL_1_TABLE = "anal_0";
     private static final int DATABASE_VERSION = 1;
 
     /**
